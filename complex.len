@@ -1,0 +1,107 @@
+MODEL TeenagerBedroomModel
+
+ENV House
+
+INSTANCE Home IN House
+INSTANCE TeenBedroom IN House PARENT Home
+INSTANCE Desk IN House PARENT TeenBedroom
+INSTANCE Bed IN House PARENT TeenBedroom
+INSTANCE Shelves IN House PARENT TeenBedroom
+INSTANCE GamingSetup IN House PARENT TeenBedroom
+INSTANCE Closet IN House PARENT TeenBedroom
+INSTANCE Door IN House PARENT TeenBedroom
+INSTANCE Window IN House PARENT TeenBedroom
+
+PROPERTY Home address = "456 Oak Avenue"
+PROPERTY Home owner = "Johnson Family"
+
+PROPERTY TeenBedroom name = "Alex's Bedroom"
+PROPERTY TeenBedroom size = 250
+PROPERTY TeenBedroom color = "dark blue"
+PROPERTY TeenBedroom floor_type = "wooden"
+PROPERTY TeenBedroom wall_posters = "3"
+
+PROPERTY Desk dimensions = "120x60cm"
+PROPERTY Desk material = "oak"
+PROPERTY Desk drawers = "3"
+PROPERTY Desk surface_state = "cluttered"
+
+PROPERTY Bed type = "queen"
+PROPERTY Bed color = "black"
+PROPERTY Bed sheets_type = "cotton"
+PROPERTY Bed pillows = "2"
+PROPERTY Bed mattress_condition = "good"
+
+PROPERTY Shelves count = "5"
+PROPERTY Shelves material = "metal"
+PROPERTY Shelves content = "books, trophies, figures"
+PROPERTY Shelves max_weight = "50kg"
+
+PROPERTY GamingSetup monitor_count = "2"
+PROPERTY GamingSetup monitor_size = "27 inch"
+PROPERTY GamingSetup keyboard_type = "mechanical"
+PROPERTY GamingSetup gaming_console = "PS5"
+PROPERTY GamingSetup speakers = "logitech"
+PROPERTY GamingSetup chair_type = "gaming"
+
+PROPERTY Closet doors = "2"
+PROPERTY Closet size = "walk-in"
+PROPERTY Closet shelves = "10"
+PROPERTY Closet color = "white"
+
+PROPERTY Door color = "black"
+PROPERTY Door lock_type = "manual"
+PROPERTY Door soundproof = "no"
+
+PROPERTY Window direction = "north"
+PROPERTY Window size = "large"
+PROPERTY Window curtains = "blackout"
+PROPERTY Window blinds = "yes"
+
+DOMAIN Furniture IN House
+DOMAIN Electronics IN House
+DOMAIN Organization IN House
+DOMAIN Comfort IN House
+
+RELATE Desk Furniture IN House
+RELATE Bed Comfort IN House
+RELATE Shelves Organization IN House
+RELATE GamingSetup Electronics IN House
+RELATE Closet Organization IN House
+
+SUBGROUP GamingSetup "Desktop"
+SUBGROUP GamingSetup "Console"
+SUBGROUP GamingSetup "Audio"
+
+PROPERTY GamingSetup monitor_count = "2" IN SUBGROUP "Desktop"
+PROPERTY GamingSetup keyboard_type = "mechanical" IN SUBGROUP "Desktop"
+PROPERTY GamingSetup gaming_console = "PS5" IN SUBGROUP "Console"
+PROPERTY GamingSetup speakers = "logitech" IN SUBGROUP "Audio"
+
+SUBGROUP Shelves "Books"
+SUBGROUP Shelves "Trophies"
+SUBGROUP Shelves "Collectibles"
+
+PROPERTY Shelves count = "150" IN SUBGROUP "Books"
+PROPERTY Shelves count = "25" IN SUBGROUP "Trophies"
+PROPERTY Shelves count = "40" IN SUBGROUP "Collectibles"
+
+RELATE TeenBedroom Door IN House
+RELATE TeenBedroom Window IN House
+
+ENV School
+
+INSTANCE Classroom IN School
+INSTANCE Library IN School
+INSTANCE Locker IN School PARENT Classroom
+
+PROPERTY Classroom subject = "Computer Science"
+PROPERTY Classroom students = "28"
+PROPERTY Locker color = "red"
+PROPERTY Locker position = "row 3, column 5"
+PROPERTY Library books = "10000"
+
+RELATE Locker Textbooks IN School
+
+MODELRELATE TeenBedroom IN House Locker IN School
+MODELRELATE GamingSetup IN House Classroom IN School

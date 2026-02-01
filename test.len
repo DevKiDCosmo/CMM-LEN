@@ -1,0 +1,33 @@
+MODEL WorldModel
+
+ENV World
+
+INSTANCE Apple IN World
+INSTANCE Pear IN World
+INSTANCE Basket IN World
+INSTANCE GlovePair IN World PARENT Basket
+
+PROPERTY Apple count = 5
+PROPERTY Apple color = red
+PROPERTY Pear count = 3
+
+SUBGROUP Pear "Pear 1"
+SUBGROUP Pear "Pear 2"
+
+PROPERTY Pear count = 2 IN SUBGROUP "Pear 1"
+PROPERTY Pear color = green IN SUBGROUP "Pear 1"
+
+PROPERTY Pear count = 1 IN SUBGROUP "Pear 2"
+PROPERTY Pear color = yellow IN SUBGROUP "Pear 2"
+
+PROPERTY GlovePair count = 3
+PROPERTY GlovePair color = undefined
+
+INSTANCE Apple IN World
+
+ENV HELLO
+INSTANCE Apple IN HELLO
+
+RELATE Apple Pear IN World
+RELATE Apple Apple[1] IN World
+MODELRELATE Apple IN World Apple IN HELLO
