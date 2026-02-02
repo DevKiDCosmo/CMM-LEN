@@ -1,0 +1,109 @@
+MODEL SetTheoryLaw
+
+ENV SetTheory
+
+# Define the three sets as instances
+INSTANCE SetA IN SetTheory
+INSTANCE SetB IN SetTheory
+INSTANCE SetC IN SetTheory
+
+# Define elements for Set A = {1, 2, 3, 4, 5}
+INSTANCE elem1 IN SetTheory
+INSTANCE elem2 IN SetTheory
+INSTANCE elem3 IN SetTheory
+INSTANCE elem4 IN SetTheory
+INSTANCE elem5 IN SetTheory
+
+# Properties for elements
+PROPERTY elem1 value = "1"
+PROPERTY elem2 value = "2"
+PROPERTY elem3 value = "3"
+PROPERTY elem4 value = "4"
+PROPERTY elem5 value = "5"
+
+# Properties for sets
+PROPERTY SetA name = "A"
+PROPERTY SetB name = "B"
+PROPERTY SetC name = "C"
+PROPERTY SetA cardinality = "5"
+PROPERTY SetB cardinality = "2"
+PROPERTY SetC cardinality = "2"
+
+# Define domains for set membership
+DOMAIN A IN SetTheory
+DOMAIN B IN SetTheory
+DOMAIN C IN SetTheory
+DOMAIN B_union_C IN SetTheory
+DOMAIN A_minus_B IN SetTheory
+DOMAIN A_minus_C IN SetTheory
+DOMAIN A_minus_BunionC IN SetTheory
+DOMAIN Result_Intersection IN SetTheory
+DOMAIN AllElements IN SetTheory
+
+# Set A contains all elements {1, 2, 3, 4, 5}
+RELATE elem1 A IN SetTheory
+RELATE elem2 A IN SetTheory
+RELATE elem3 A IN SetTheory
+RELATE elem4 A IN SetTheory
+RELATE elem5 A IN SetTheory
+
+# Set B contains {2, 3}
+RELATE elem2 B IN SetTheory
+RELATE elem3 B IN SetTheory
+
+# Set C contains {3, 4}
+RELATE elem3 C IN SetTheory
+RELATE elem4 C IN SetTheory
+
+# All elements domain
+RELATE elem1 AllElements IN SetTheory
+RELATE elem2 AllElements IN SetTheory
+RELATE elem3 AllElements IN SetTheory
+RELATE elem4 AllElements IN SetTheory
+RELATE elem5 AllElements IN SetTheory
+
+# B ∪ C = {2, 3, 4}
+RELATE elem2 B_union_C IN SetTheory
+RELATE elem3 B_union_C IN SetTheory
+RELATE elem4 B_union_C IN SetTheory
+
+# A - (B ∪ C) = {1, 5}
+RELATE elem1 A_minus_BunionC IN SetTheory
+RELATE elem5 A_minus_BunionC IN SetTheory
+
+# A - B = {1, 4, 5}
+RELATE elem1 A_minus_B IN SetTheory
+RELATE elem4 A_minus_B IN SetTheory
+RELATE elem5 A_minus_B IN SetTheory
+
+# A - C = {1, 2, 5}
+RELATE elem1 A_minus_C IN SetTheory
+RELATE elem2 A_minus_C IN SetTheory
+RELATE elem5 A_minus_C IN SetTheory
+
+# (A - B) ∩ (A - C) = {1, 5}
+RELATE elem1 Result_Intersection IN SetTheory
+RELATE elem5 Result_Intersection IN SetTheory
+
+# Rules for set operations
+RULE UnionRule IF elem1 IN Domain B THEN in_B_union_C AXIOM true
+RULE UnionRule2 IF elem1 IN Domain C THEN in_B_union_C AXIOM true
+RULE DifferenceRule IF elem1 IN Domain A THEN check_not_in_B_union_C AXIOM true
+RULE IntersectionRule IF elem1 IN Domain A_minus_B THEN check_also_in_A_minus_C AXIOM true
+
+QUERY ElementsInA elem1 IN Domain A
+QUERY ElementsInB elem1 IN Domain B
+QUERY ElementsInC elem1 IN Domain C
+QUERY BUnionC elem1 IN Domain B_union_C
+QUERY A_Minus_BUnionC elem1 IN Domain A_minus_BunionC
+QUERY A_MinusB elem1 IN Domain A_minus_B
+QUERY A_MinusC elem1 IN Domain A_minus_C
+QUERY ResultIntersection elem1 IN Domain Result_Intersection
+
+PROVE SetDifferenceLaw: A_minus_BunionC EQUALS Result_Intersection
+PROVE SetIdentity: A - (B ∪ C) = (A - B) ∩ (A - C)
+PROVE LeftSideCardinality: A_minus_BunionC HAS_CARDINALITY 2
+PROVE RightSideCardinality: Result_Intersection HAS_CARDINALITY 2
+
+ASSERT SetEquality: A_minus_BunionC CONTAINS_EXACTLY_SAME_ELEMENTS_AS Result_Intersection
+ASSERT MathematicallyValid: NO_EMPTY_SETS_IN_RESULT

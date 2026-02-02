@@ -89,6 +89,9 @@ PROPERTY Shelves count = "40" IN SUBGROUP "Collectibles"
 RELATE TeenBedroom Door IN House
 RELATE TeenBedroom Window IN House
 
+RELATE Shelves Furniture IN House
+RELATE Closet Furniture IN House
+
 ENV School
 
 INSTANCE Classroom IN School
@@ -105,3 +108,5 @@ RELATE Locker Textbooks IN School
 
 MODELRELATE TeenBedroom IN House Locker IN School
 MODELRELATE GamingSetup IN House Classroom IN School
+
+# Something to compute

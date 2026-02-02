@@ -1,0 +1,82 @@
+NumberTheory (Environment)
+├── k (Instance), Domain: Integers
+│   └── value = 12
+├── k_squared (Instance), Domain: Integers
+│   ├── value = 144
+│   └── derived_from = k
+├── n1 (Instance), Domain: DivisorsOfK, DivisorsOfKSquared, Integers
+│   ├── value = 1
+│   ├── divides_k = true
+│   └── divides_k_squared = true
+├── n2 (Instance), Domain: DivisorsOfK, DivisorsOfKSquared, Integers
+│   ├── value = 2
+│   ├── divides_k = true
+│   └── divides_k_squared = true
+├── n3 (Instance), Domain: DivisorsOfK, DivisorsOfKSquared, Integers
+│   ├── value = 3
+│   ├── divides_k = true
+│   └── divides_k_squared = true
+├── n4 (Instance), Domain: DivisorsOfK, DivisorsOfKSquared, Integers
+│   ├── value = 4
+│   ├── divides_k = true
+│   └── divides_k_squared = true
+├── n5 (Instance), Domain: DivisorsOfK, DivisorsOfKSquared, Integers
+│   ├── value = 6
+│   ├── divides_k = true
+│   └── divides_k_squared = true
+└── n6 (Instance), Domain: DivisorsOfK, DivisorsOfKSquared, Integers
+    ├── value = 12
+    ├── divides_k = true
+    └── divides_k_squared = true
+Relationships between Instances:
+
+Domain memberships:
+- DivisorsOfK (NumberTheory): n1, n2, n3, n4, n5, n6
+- DivisorsOfKSquared (NumberTheory): n1, n2, n3, n4, n5, n6
+- Integers (NumberTheory): k, k_squared, n1, n2, n3, n4, n5, n6
+
+Domains without instances:
+
+=== QUERY RESULTS ===
+Query: n1 IN Domain DivisorsOfK
+  - n1
+  - n2
+  - n3
+  - n4
+  - n5
+  - n6
+Query: n1 IN Domain DivisorsOfKSquared
+  - n1
+  - n2
+  - n3
+  - n4
+  - n5
+  - n6
+
+=== INFERENCE ENGINE ===
+Completed in 2 iteration(s)
+Total rules triggered: 20
+
+Rule summary:
+  'SquarePreservesDivisibility' applied 8 time(s)
+  'DivisorOfK' applied 6 time(s)
+  'DivisorInheritance' applied 6 time(s)
+
+=== MATHEMATICAL PROOFS (Z3) ===
+
+Proof: SubsetRelation
+Statement: DivisorsOfK SUBSET_OF DivisorsOfKSquared
+
+Proof: ElementMembership
+Statement: n3 IN DivisorsOfK IMPLIES n3 IN DivisorsOfKSquared
+
+Proof: DivisibilityTransitive
+Statement: n2 DIVIDES k AND k_squared EQUALS k_TIMES_k IMPLIES n2 DIVIDES k_squared
+
+=== ASSERTIONS (Z3) ===
+
+Assertion: ConsistentDivisibility
+Statement: ALL_DIVISORS_OF_K_ARE_IN_K_SQUARED
+
+Assertion: MathematicallySound
+Statement: NO_CONTRADICTIONS IN DIVISIBILITY_RULES

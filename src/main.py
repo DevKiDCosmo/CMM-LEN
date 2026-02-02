@@ -184,15 +184,17 @@ class SubGroupInstance:
 class PropertyInstance:
     id: str
     key: str
-    value: Union[str, InstanceObject]
+    value: Union[str, int, float, bool, InstanceObject]
     instance: InstanceObject
     register: Register
+    calculated: bool = False  # Flag if value was calculated
 
-    def __init__(self, key: str, value: Union[str, InstanceObject], instance: InstanceObject):
+    def __init__(self, key: str, value: Union[str, int, float, bool, InstanceObject], instance: InstanceObject, calculated: bool = False):
         self.id = "prop_" + uuid.uuid4().hex
         self.key = key
         self.value = value
         self.instance = instance
+        self.calculated = calculated
         model = get_current_model()
         self.register = model.register
         self.register.register(self)
@@ -233,6 +235,89 @@ class ModelRelationship:
     left: InstanceObject
     right: InstanceObject
 
+
+class Query:
+    def __init__(self, description: str):
+        self.description = description
+        self.results: list[InstanceObject | Domain] = []
+
+    def execute(self, model: "Model") -> list:
+        return self.results
+
+
+class Rule:
+    def __init__(self, name: str, condition: callable, consequence: callable, axiom: bool = True):
+        self.name = name
+        self.condition = condition
+        self.consequence = consequence
+        self.axiom = axiom
+        self.triggered_count = 0
+        self.applied_to: set[str] = set()  # Track which objects this rule was applied to
+
+    def check_and_apply(self, obj: Union[InstanceObject, Domain], force: bool = False) -> bool:
+        """Check condition and apply consequence if not already applied."""
+        obj_id = obj.id
+        
+        # Skip if already applied to this object (unless forced)
+        if not force and obj_id in self.applied_to:
+            return False
+            
+        if self.condition(obj):
+            self.consequence(obj)
+            self.triggered_count += 1
+            self.applied_to.add(obj_id)
+            return True
+        return False
+
+
+class InferenceEngine:
+    def __init__(self, model: "Model"):
+        self.model = model
+        self.rules: list[Rule] = []
+        self.derived_facts: dict[str, set[str]] = {}  # Changed to set for uniqueness
+
+    def add_rule(self, rule: Rule) -> None:
+        self.rules.append(rule)
+
+    def infer(self) -> dict:
+        """Run inference engine until no new facts can be derived."""
+        results = {"triggered_rules": [], "new_facts": [], "iterations": 0}
+        max_iterations = 100
+        iteration = 0
+
+        while iteration < max_iterations:
+            iteration += 1
+            triggered_this_round = False
+
+            # Apply rules to all instances
+            for inst in self.model.instances:
+                for rule in self.rules:
+                    if rule.check_and_apply(inst):
+                        triggered_this_round = True
+                        results["triggered_rules"].append(
+                            {"rule": rule.name, "instance": inst.name, "iteration": iteration}
+                        )
+
+            # Apply rules to all domains
+            for dom in self.model.domains:
+                for rule in self.rules:
+                    if rule.check_and_apply(dom):
+                        triggered_this_round = True
+                        results["triggered_rules"].append(
+                            {"rule": rule.name, "domain": dom.name, "iteration": iteration}
+                        )
+
+            # Stop if no new facts were derived
+            if not triggered_this_round:
+                results["iterations"] = iteration
+                break
+
+        if iteration >= max_iterations:
+            results["iterations"] = max_iterations
+            results["warning"] = "Reached maximum iterations"
+
+        return results
+
 class Model:
     def __init__(self):
         set_current_model(self)
@@ -243,6 +328,9 @@ class Model:
         self.properties: list[PropertyInstance] = []
         self.domains: list[Domain] = []
         self.model_relationships: list[ModelRelationship] = []
+        self.queries: list[Query] = []
+        self.rules: list[Rule] = []
+        self.inference_engine = InferenceEngine(self)
 
     def tree(self) -> str:
         lines: list[str] = []

@@ -1,7 +1,7 @@
 # CMM-LEN Logic Evaluation Network
 
+This is a integration for Z3 from MS. Through more complex data structural integrety more and complex operation can be performed by the actoring agent.
 
-EnvObj <- IntObj <- PropInt
 
 ## Example
 

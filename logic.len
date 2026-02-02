@@ -1,0 +1,79 @@
+MODEL DivisibilityTheorem
+
+ENV NumberTheory
+
+INSTANCE k IN NumberTheory
+INSTANCE k_squared IN NumberTheory
+INSTANCE n1 IN NumberTheory
+INSTANCE n2 IN NumberTheory
+INSTANCE n3 IN NumberTheory
+INSTANCE n4 IN NumberTheory
+INSTANCE n5 IN NumberTheory
+INSTANCE n6 IN NumberTheory
+
+PROPERTY k value = 12
+PROPERTY k_squared value = 144
+PROPERTY k_squared derived_from = k
+
+PROPERTY n1 value = 1
+PROPERTY n2 value = 2
+PROPERTY n3 value = 3
+PROPERTY n4 value = 4
+PROPERTY n5 value = 6
+PROPERTY n6 value = 12
+
+CALCULATE n1 divides_k = n1 EQUIV 0 MOD k
+# Should be true
+CALCULATE n2 divides_k = n2 EQUIV 0 MOD k
+CALCULATE n3 divides_k = n3 EQUIV 0 MOD k
+CALCULATE n4 divides_k = n4 EQUIV 0 MOD k
+CALCULATE n5 divides_k = n5 EQUIV 0 MOD k
+CALCULATE n6 divides_k = n6 EQUIV 0 MOD k
+
+CALCULATE n1 divides_k_squared = n1 EQUIV 0 MOD k_squared
+CALCULATE n2 divides_k_squared = n2 EQUIV 0 MOD k_squared
+CALCULATE n3 divides_k_squared = n3 EQUIV 0 MOD k_squared
+CALCULATE n4 divides_k_squared = n4 EQUIV 0 MOD k_squared
+CALCULATE n5 divides_k_squared = n5 EQUIV 0 MOD k_squared
+CALCULATE n6 divides_k_squared = n6 EQUIV 0 MOD k_squared
+
+DOMAIN DivisorsOfK IN NumberTheory
+DOMAIN DivisorsOfKSquared IN NumberTheory
+DOMAIN Integers IN NumberTheory
+
+RELATE k Integers IN NumberTheory
+RELATE k_squared Integers IN NumberTheory
+RELATE n1 Integers IN NumberTheory
+RELATE n2 Integers IN NumberTheory
+RELATE n3 Integers IN NumberTheory
+RELATE n4 Integers IN NumberTheory
+RELATE n5 Integers IN NumberTheory
+RELATE n6 Integers IN NumberTheory
+
+RELATE n1 DivisorsOfK IN NumberTheory
+RELATE n2 DivisorsOfK IN NumberTheory
+RELATE n3 DivisorsOfK IN NumberTheory
+RELATE n4 DivisorsOfK IN NumberTheory
+RELATE n5 DivisorsOfK IN NumberTheory
+RELATE n6 DivisorsOfK IN NumberTheory
+
+RELATE n1 DivisorsOfKSquared IN NumberTheory
+RELATE n2 DivisorsOfKSquared IN NumberTheory
+RELATE n3 DivisorsOfKSquared IN NumberTheory
+RELATE n4 DivisorsOfKSquared IN NumberTheory
+RELATE n5 DivisorsOfKSquared IN NumberTheory
+RELATE n6 DivisorsOfKSquared IN NumberTheory
+
+RULE DivisorOfK IF n1 IN Domain DivisorsOfK THEN divides_original AXIOM true
+RULE DivisorInheritance IF n1 IN Domain DivisorsOfK THEN also_in_k_squared AXIOM true
+RULE SquarePreservesDivisibility IF k_squared IN Domain Integers THEN preserves_divisors AXIOM true
+
+QUERY AllDivisorsOfK n1 IN Domain DivisorsOfK
+QUERY AllDivisorsOfKSquared n1 IN Domain DivisorsOfKSquared
+
+PROVE SubsetRelation: DivisorsOfK SUBSET_OF DivisorsOfKSquared
+PROVE ElementMembership: n3 IN DivisorsOfK IMPLIES n3 IN DivisorsOfKSquared
+PROVE DivisibilityTransitive: n2 DIVIDES k AND k_squared EQUALS k_TIMES_k IMPLIES n2 DIVIDES k_squared
+ASSERT ConsistentDivisibility: ALL_DIVISORS_OF_K_ARE_IN_K_SQUARED
+ASSERT MathematicallySound: NO_CONTRADICTIONS IN DIVISIBILITY_RULES
+
