@@ -12,6 +12,13 @@ also in $S$, we know that every element $x$ in $K$ is also in $S$, thus $K ⊆S$
 
 ### Initialize the Model
 
->[!NOTE] L-Model
+> [!NOTE]
+> L-Model
 > A CMM-LEN Model aka L-Model will contain all nessecary information about domains, groups, instances etc. Through complex relationships and intersection environments, logical correlation. Coherence can be maintained.
 
+```len
+MODEL model
+ENV Proof
+
+DOMAIN Z IN Proof
+```
