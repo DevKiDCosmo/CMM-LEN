@@ -1,0 +1,11 @@
+MODEL model
+
+ENV debug
+
+INSTANCE test IN debug
+PROPERTY test value = 2
+
+INSTANCE test2 IN debug
+PROPERTY test2 value = 4
+
+CALCULATE test arit = test * test2

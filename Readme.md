@@ -67,3 +67,28 @@ Subgroups. Same Instances. Like dogs from different races
 Inherite Instances in a Instance. Like a apple in a basket
 
 # Relationship
+
+
+
+
+```mermaid
+flowchart TD
+    A[Start] --> B[Initialize Knowledge Base]
+    B --> C[Generate Hypothesis]
+    C --> D[Select Proof Strategy]
+    D --> E[Run Automated Theorem Prover ATP]
+    E --> F{Is Proof Successful?}
+    F -- Yes --> G[Store Proof in Knowledge Base]
+    G --> H[Evaluate Knowledge Base & Proof]
+    H --> I[Meta-Reasoning: Identify Gaps/Improvements]
+    I --> J[Revise Knowledge Base & Proof Strategy]
+    J --> C
+    F -- No --> K[Analyze Failure Error Analysis]
+    K --> L[Revise Hypothesis or Strategy]
+    L --> D
+    I --> M{Self-Improvement: Knowledge Expansion}
+    M -- Yes --> N[Expand Knowledge Base with New Axioms]
+    N --> J
+    M -- No --> O[Finalize Proof Process]
+    O --> P[End]
+```

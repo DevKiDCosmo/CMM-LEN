@@ -10,9 +10,11 @@ INSTANCE n3 IN NumberTheory
 INSTANCE n4 IN NumberTheory
 INSTANCE n5 IN NumberTheory
 INSTANCE n6 IN NumberTheory
+INSTANCE test_sqrt IN NumberTheory
+INSTANCE test_arithmetic IN NumberTheory
 
 PROPERTY k value = 12
-PROPERTY k_squared value = 144
+CALCULATE k_squared value = k * k
 PROPERTY k_squared derived_from = k
 
 PROPERTY n1 value = 1
@@ -22,8 +24,14 @@ PROPERTY n4 value = 4
 PROPERTY n5 value = 6
 PROPERTY n6 value = 12
 
+# Arithmetic calculations
+CALCULATE test_sqrt value = SQRT(144)
+CALCULATE test_arithmetic sum = n2 + n3
+CALCULATE test_arithmetic product = n2 * n3
+CALCULATE test_arithmetic division = k / n2
+
+# Divisibility checks using EQUIV
 CALCULATE n1 divides_k = n1 EQUIV 0 MOD k
-# Should be true
 CALCULATE n2 divides_k = n2 EQUIV 0 MOD k
 CALCULATE n3 divides_k = n3 EQUIV 0 MOD k
 CALCULATE n4 divides_k = n4 EQUIV 0 MOD k
@@ -49,6 +57,8 @@ RELATE n3 Integers IN NumberTheory
 RELATE n4 Integers IN NumberTheory
 RELATE n5 Integers IN NumberTheory
 RELATE n6 Integers IN NumberTheory
+RELATE test_sqrt Integers IN NumberTheory
+RELATE test_arithmetic Integers IN NumberTheory
 
 RELATE n1 DivisorsOfK IN NumberTheory
 RELATE n2 DivisorsOfK IN NumberTheory

@@ -45,6 +45,8 @@ def parse_value(value_str: str):
 
 def evaluate_calculation(expression: str, model: Model, line_no: int):
     """Evaluate a mathematical calculation expression."""
+    import math
+    
     # Handle EQUIV (modular equivalence)
     if "EQUIV" in expression:
         match = re.match(r"(\w+)\s+EQUIV\s+(\d+)\s+MOD\s+(\w+)", expression)
@@ -78,9 +80,46 @@ def evaluate_calculation(expression: str, model: Model, line_no: int):
             else:
                 raise ValueError(f"Line {line_no}: Cannot resolve variables in CALCULATE: {expression} (val1={val1}, val2={val2})")
     
-    # Handle simple arithmetic
-    # Could be extended with more operations
-    raise ValueError(f"Line {line_no}: Unsupported CALCULATE expression: {expression}")
+    # Handle arithmetic expressions
+    # Replace instance names with their values
+    eval_expr = expression
+    
+    # Replace SQRT function
+    eval_expr = eval_expr.replace("SQRT", "math.sqrt")
+    
+    # Find all variable names and replace with their values
+    var_pattern = r'\b([a-zA-Z_]\w*)\b'
+    variables = re.findall(var_pattern, eval_expr)
+    
+    # Build a namespace with variable values
+    namespace = {"math": math}
+    
+    for var_name in variables:
+        # Skip if it's already a known function
+        if var_name in ["math", "sqrt", "SQRT"]:
+            continue
+            
+        # Try to find variable in instances
+        for inst in model.instances:
+            if inst.name == var_name:
+                # Look for 'value' property
+                for prop_id in inst.properties:
+                    prop = model.register.get(prop_id)
+                    if prop and isinstance(prop, PropertyInstance) and prop.key == "value":
+                        namespace[var_name] = prop.value
+                        break
+                break
+    
+    try:
+        # Evaluate the expression safely
+        result = eval(eval_expr, {"__builtins__": {}}, namespace)
+        
+        # Convert to appropriate type
+        if isinstance(result, float) and result.is_integer():
+            return int(result)
+        return result
+    except Exception as e:
+        raise ValueError(f"Line {line_no}: Cannot evaluate CALCULATE expression '{expression}': {e}")
 
 def parse_len(filepath):
     """Parse a .len file and build the model."""
@@ -547,6 +586,53 @@ def show_assertions(result):
                     print(f"✗ INVALID: {result_assert['reason']}")
 
 
+def show_calculations(result):
+    """Display all calculated values in a table."""
+    if not isinstance(result, Model):
+        return
+    
+    # Collect all calculated properties
+    calculated_props = []
+    for prop in result.properties:
+        if isinstance(prop, PropertyInstance) and prop.calculated:
+            calculated_props.append(prop)
+    
+    if not calculated_props:
+        return
+    
+    print("\n=== CALCULATED VALUES ===")
+    
+    # Find max widths for table columns
+    max_instance = max(len(prop.instance.name) for prop in calculated_props)
+    max_key = max(len(prop.key) for prop in calculated_props)
+    max_value = max(len(str(prop.value)) for prop in calculated_props)
+    max_type = max(len(type(prop.value).__name__) for prop in calculated_props)
+    
+    # Ensure minimum widths
+    max_instance = max(max_instance, len("Instance"))
+    max_key = max(max_key, len("Property"))
+    max_value = max(max_value, len("Value"))
+    max_type = max(max_type, len("Type"))
+    
+    # Print header
+    header = f"{'Instance':<{max_instance}} | {'Property':<{max_key}} | {'Value':<{max_value}} | {'Type':<{max_type}}"
+    separator = "-" * len(header)
+    print(separator)
+    print(header)
+    print(separator)
+    
+    # Print rows
+    for prop in calculated_props:
+        instance_name = prop.instance.name
+        key = prop.key
+        value = str(prop.value)
+        value_type = type(prop.value).__name__
+        print(f"{instance_name:<{max_instance}} | {key:<{max_key}} | {value:<{max_value}} | {value_type:<{max_type}}")
+    
+    print(separator)
+    print(f"Total calculated values: {len(calculated_props)}")
+
+
 def main():
     parser = argparse.ArgumentParser(description="Parse and analyze files")
     parser.add_argument("filepath", help="Path to file to parse")
@@ -559,6 +645,7 @@ def main():
         show_relationships(result)
         show_queries(result)
         show_inference(result)
+        show_calculations(result)
         show_proofs(result)
         show_assertions(result)
 

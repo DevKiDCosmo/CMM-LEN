@@ -1,0 +1,122 @@
+MODEL PrimeAndQuadraticIntersection
+
+ENV NumberTheory
+
+# Natural numbers k for k^2 - 1
+INSTANCE k1 IN NumberTheory
+INSTANCE k2 IN NumberTheory
+INSTANCE k3 IN NumberTheory
+INSTANCE k4 IN NumberTheory
+INSTANCE k5 IN NumberTheory
+INSTANCE k6 IN NumberTheory
+INSTANCE k7 IN NumberTheory
+
+PROPERTY k1 value = 1
+PROPERTY k2 value = 2
+PROPERTY k3 value = 3
+PROPERTY k4 value = 4
+PROPERTY k5 value = 5
+PROPERTY k6 value = 6
+PROPERTY k7 value = 7
+
+# Calculate k^2 - 1 for each k
+CALCULATE k1 quadratic_form = k1 * k1 - 1
+CALCULATE k2 quadratic_form = k2 * k2 - 1
+CALCULATE k3 quadratic_form = k3 * k3 - 1
+CALCULATE k4 quadratic_form = k4 * k4 - 1
+CALCULATE k5 quadratic_form = k5 * k5 - 1
+CALCULATE k6 quadratic_form = k6 * k6 - 1
+CALCULATE k7 quadratic_form = k7 * k7 - 1
+
+# Prime numbers instances
+INSTANCE p2 IN NumberTheory
+INSTANCE p3 IN NumberTheory
+INSTANCE p5 IN NumberTheory
+INSTANCE p7 IN NumberTheory
+INSTANCE p11 IN NumberTheory
+INSTANCE p13 IN NumberTheory
+INSTANCE p17 IN NumberTheory
+INSTANCE p19 IN NumberTheory
+INSTANCE p23 IN NumberTheory
+
+PROPERTY p2 value = 2
+PROPERTY p3 value = 3
+PROPERTY p5 value = 5
+PROPERTY p7 value = 7
+PROPERTY p11 value = 11
+PROPERTY p13 value = 13
+PROPERTY p17 value = 17
+PROPERTY p19 value = 19
+PROPERTY p23 value = 23
+
+# Mark primes as prime
+PROPERTY p2 is_prime = true
+PROPERTY p3 is_prime = true
+PROPERTY p5 is_prime = true
+PROPERTY p7 is_prime = true
+PROPERTY p11 is_prime = true
+PROPERTY p13 is_prime = true
+PROPERTY p17 is_prime = true
+PROPERTY p19 is_prime = true
+PROPERTY p23 is_prime = true
+
+# Domains
+DOMAIN PrimeNumbers IN NumberTheory
+DOMAIN QuadraticForm IN NumberTheory
+DOMAIN NaturalNumbers IN NumberTheory
+DOMAIN Intersection IN NumberTheory
+
+# Add primes to PrimeNumbers domain
+RELATE p2 PrimeNumbers IN NumberTheory
+RELATE p3 PrimeNumbers IN NumberTheory
+RELATE p5 PrimeNumbers IN NumberTheory
+RELATE p7 PrimeNumbers IN NumberTheory
+RELATE p11 PrimeNumbers IN NumberTheory
+RELATE p13 PrimeNumbers IN NumberTheory
+RELATE p17 PrimeNumbers IN NumberTheory
+RELATE p19 PrimeNumbers IN NumberTheory
+RELATE p23 PrimeNumbers IN NumberTheory
+
+# Add k^2-1 values to QuadraticForm domain
+RELATE k1 QuadraticForm IN NumberTheory
+RELATE k2 QuadraticForm IN NumberTheory
+RELATE k3 QuadraticForm IN NumberTheory
+RELATE k4 QuadraticForm IN NumberTheory
+RELATE k5 QuadraticForm IN NumberTheory
+RELATE k6 QuadraticForm IN NumberTheory
+RELATE k7 QuadraticForm IN NumberTheory
+
+# Natural numbers
+RELATE k1 NaturalNumbers IN NumberTheory
+RELATE k2 NaturalNumbers IN NumberTheory
+RELATE k3 NaturalNumbers IN NumberTheory
+RELATE k4 NaturalNumbers IN NumberTheory
+RELATE k5 NaturalNumbers IN NumberTheory
+RELATE k6 NaturalNumbers IN NumberTheory
+RELATE k7 NaturalNumbers IN NumberTheory
+
+# Only p3 is in the intersection
+RELATE p3 Intersection IN NumberTheory
+
+# Verification: p3 is both prime and of form k^2-1 (specifically 2^2-1=3)
+PROPERTY p3 in_quadratic_form = true
+PROPERTY p3 quadratic_k = 2
+
+# Rules for verification
+RULE PrimeIntersection IF p3 IN Domain PrimeNumbers THEN in_intersection AXIOM true
+RULE QuadraticIntersection IF k3 IN Domain QuadraticForm THEN generates_three AXIOM true
+RULE UniqueIntersection IF p3 IN Domain Intersection THEN only_element AXIOM true
+
+# Queries
+QUERY AllPrimes p2 IN Domain PrimeNumbers
+QUERY AllQuadratic k1 IN Domain QuadraticForm
+QUERY IntersectionElements p3 IN Domain Intersection
+
+# Proofs
+PROVE PrimeThree: p3 HAS_PROPERTY is_prime = true
+PROVE QuadraticThree: k2 SATISFIES k2 * k2 - 1 = p3
+PROVE IntersectionEqualsThree: Intersection CONTAINS_ONLY p3
+PROVE UniqueElement: |PrimeNumbers ∩ QuadraticForm| = 1
+
+ASSERT IntersectionCorrect: ONLY_3_IS_BOTH_PRIME_AND_k2_MINUS_1
+ASSERT NoneOtherMatches: PRIMES_2_5_7_11_NOT_IN_QUADRATIC_FORM
