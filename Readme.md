@@ -1,7 +1,6 @@
 # CMM-LEN Logic Evaluation Network
 
-This is a integration for Z3 from MS. Through more complex data structural integrety more and complex operation can be performed by the actoring agent.
-
+Automatically full autonom proving network.
 
 ## Example
 
@@ -69,21 +68,22 @@ Inherite Instances in a Instance. Like a apple in a basket
 # Relationship
 
 
-
+# Flow Chart for Reasoning and Proving Statements
+RPSTN (Reasoning and Porivng Statement Network).
 
 ```mermaid
 flowchart TD
     A[Start] --> B[Initialize Knowledge Base]
     B --> C[Generate Hypothesis]
     C --> D[Select Proof Strategy]
-    D --> E[Run Automated Theorem Prover ATP]
+    D --> E["Run Automated Theorem Prover (ATP)"]
     E --> F{Is Proof Successful?}
     F -- Yes --> G[Store Proof in Knowledge Base]
     G --> H[Evaluate Knowledge Base & Proof]
     H --> I[Meta-Reasoning: Identify Gaps/Improvements]
     I --> J[Revise Knowledge Base & Proof Strategy]
     J --> C
-    F -- No --> K[Analyze Failure Error Analysis]
+    F -- No --> K["Analyze Failure (Error Analysis)"]
     K --> L[Revise Hypothesis or Strategy]
     L --> D
     I --> M{Self-Improvement: Knowledge Expansion}
@@ -92,3 +92,46 @@ flowchart TD
     M -- No --> O[Finalize Proof Process]
     O --> P[End]
 ```
+
+Through the use of different well-known well-built frameworks / engine we can build on top of this and create a more complex autonom reasonsing and proving engine.
+
+### How Humans Prove Things
+
+See [PDF of University of Münster](https://hal.science/hal-03746866v1/file/TWG01_16_Kirsten.pdf)
+
+## How to proof a statement in real life (linguistical)
+
+> Apples are red
+
+We know for sure that apples are red. But how do we show and display a proof that apples are red? It is "all" apples are red or it is "some" apples are red. From a linguistic point of view, language is much more difficult to prove than pure mathematics. Language is much more versatile in its meaning and one statement may have multiple answer and results.
+
+So we have to convert the linguistical meaning into mathematical meaning. Now it is either $\exists \text{Apple}.\text{color} = \text{red}$ or $\forall \text{Apple}.\text{color} = \text{red}$. The color is a property of the instance Apple.
+
+$$ (\forall \text{I}.\text{p} = \text{v} \lor \exists \text{I}.\text{p} = \text{v}) \oplus (\forall \text{I}.\text{p} = \text{v} \oplus \exists \text{I}.\text{p} = \text{v}) $$
+
+To prove either of them, we can use multiple kinds of methods. We're going to use the direct prove through knowledge. We know that Apples can be *red* but also there are Apples that are *green* or *brown*.
+
+So the first statement is correct but the second is not. So Language is not the best method to be used for a statement without concrete or narrowed domain in which we can then prove.
+
+## How to proof a statement in real life (mathematical)
+
+$$ \text{If}\space k \in \mathbb{Z}, \text{then}\space\{n \in \mathbb{Z} : n|k\}⊆\{n \in \mathbb{Z} : n|k^2\} $$
+
+We can split this statement into two pieces. One the effect and one the instances of the effect. 
+
+- Instances: $k \in \mathbb{Z}$
+- Effect: $\{n \in \mathbb{Z} : n|k\}⊆\{n \in \mathbb{Z} : n|k^2\}$
+
+Those statements in the statement again can be splitted again into instances and effect.
+
+- Instances of Stmt 1: $n \in \mathbb{Z}$
+- Effect of Stmt 1: $n|k$
+
+The inference engine can see that $n$ is divisble by $k$. So from the database we can say that $k = m \cdot n$ where all are in the $\mathbb{Z}$ domain. This is an already proven rule / axiom with an entry like:
+
+$$ E: [v_1 | v_2]; S : [v_2 = a_r v_1] ; D : [op~slm[op~d~v_1 \lor op~d~v_2]] $$
+or
+$$ E: [v_1 | v_2]; S : [v_2 / a_r \equiv 0 \mod v_1] ; D : ... $$
+
+slm stands for set level max. N is smaller then Z so Z is chosen as domain. Op d meaing, getting the domain of the variable.
+

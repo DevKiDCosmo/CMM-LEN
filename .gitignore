@@ -6,3 +6,5 @@ __pycache__/
 .vscode/
 node_modules/
 src/.venv/
+debug/
+LEARNING.md
