@@ -9,7 +9,8 @@ Suppose $k ∈\mathbb{Z}$ and let $K= \{n ∈ \mathbb{Z} : n|k\}$ and $S= \{n �
 
 ### Initialize the Model
 
-> [!NOTE] L-Model
+> [!NOTE]
+> L-Model
 > A CMM-LEN Model aka L-Model will contain all nessecary information about domains, groups, instances etc. Through complex relationships and intersection environments, logical correlation. Coherence can be maintained.
 
 ```len
